@@ -8,15 +8,16 @@
     "prebuild": "rimraf dist",
     "lint": "eslint",
     "build": "tsc --project ./",
-    "start": "node dist/server.js",
+    "start": "node dist/main.js",
     "debug": "cd dist && node server.js"
   },
   "author": "sunil",
   "license": "ISC",
-  "dependencies": {
-    "datastructures-js": "^13.0.0"
-  },
   "devDependencies": {
-    "@types/node": "^20.14.10"
+    "@types/node": "^20.14.10",
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "data-structure-typed": "^1.52.0"
   }
 }
