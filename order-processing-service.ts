@@ -14,6 +14,8 @@ export class OrderProcessingService {
 
     protected orderMatched(buyOrder: Order, sellOrder: Order) {
 
+        console.log(`order matched BUY:[id:${buyOrder.id} qty:${buyOrder.quantity} price:${buyOrder.price}] SELL:[id:${sellOrder.id} qty:${sellOrder.quantity} price:${sellOrder.price}]`);
+
         if (buyOrder.quantity === sellOrder.quantity) {
             buyOrder.status = sellOrder.status = 'fulfilled';
             buyOrder.fullfilledQuantity = buyOrder.quantity;

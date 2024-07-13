@@ -59,7 +59,7 @@ export class MatchingEngine {
         const availableStocks = this.sellMap.get(order.stockId);
         for (const sellorder of availableStocks.values()) {
 
-            console.log(`checking if buy order:${order} can be fullfilled sell order:${sellorder}`);
+            console.log(`checking match BUY:[id:${order.id} qty:${order.quantity} price:${order.price}] SELL:[id:${sellorder.id} qty:${sellorder.quantity} price:${sellorder.price}]`);
             // check if the sellers's price matches with buyer's price
             if (order.price >= sellorder.price && sellorder.status !== 'fulfilled') {
 
@@ -72,19 +72,16 @@ export class MatchingEngine {
 
     fulfillOrders() {
 
-        let s = new Sorted
+        // pull all the buy orders for all stocks and execute
+        for (const stockId of this.buyMap.keys()) {
 
-        // the order is to buy, check in the sellQ if there are any orders that can be fullfilled
-        const availableStocks = this.sellMap.get(order.stockId);
-        for (const sellorder of availableStocks.values()) {
+            console.log(`fulfill orders for stock:${stockId}`);
 
-            console.log(`checking if buy order:${order} can be fullfilled sell order:${sellorder}`);
-            // check if the sellers's price matches with buyer's price
-            if (order.price >= sellorder.price && sellorder.status !== 'fulfilled') {
+            const buyOrders = this.buyMap.get(stockId);
+            buyOrders.forEach( (order) => {
+                this.fulfillOrder(order);
+            });
 
-                this.eventEmitter.emit('order-matched', order, sellorder);
-                break;
-            }
         }
     }
 

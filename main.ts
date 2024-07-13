@@ -38,8 +38,8 @@ function loadOrders() {
         })
         .on('end', () => {
             console.log('CSV file successfully processed');
-            matchingEngine.fullfillOrders();
-            matchingEngine.print()
+            matchingEngine.fulfillOrders();
+            //matchingEngine.print()
         });
 }
 
