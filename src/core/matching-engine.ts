@@ -1,9 +1,10 @@
-import { LinkedListQueue, MaxHeap, MinHeap } from "data-structure-typed";
-import { Order } from "./order.interface";
+import { Order } from "../order/order.interface";
 import { EventEmitter } from 'events';
 
 /**
- * Class that accepts an order and matches the sell and by orders
+ * class: MatchingEngine - accepts an incoming order from the broker.
+ * Matches the buy orders with the buy orders and updates the order-processor Queue.
+ * 
  */
 export class MatchingEngine {
 
@@ -13,13 +14,29 @@ export class MatchingEngine {
     /** Sellers want higher selling prices, map the stock-id and the prices in the decreasing order */
     protected sellMap: Map<string, LinkedListQueue>
 
+    protected buyOrders: MinHeap<Order> = null;
+    protected sellOrders: MaxHeap<Order> = null;
+
     constructor(eventEmitter: EventEmitter) {
 
         this.buyMap = new Map<string, LinkedListQueue<Order>>();
         this.sellMap = new Map<string, LinkedListQueue<Order>>();
+
+        this.buyOrders = new MinHeap<Order>(null, {
+            comparator: (a: Order, b: Order) => {
+                return a.price - b.price;
+            }
+        });
+        this.sellOrders = new MaxHeap<Order>(null, {
+            comparator: (a: Order, b: Order) => {
+                return b.price - a.price;
+            }
+        });
+
         this.eventEmitter = eventEmitter;
         this.eventEmitter.on('order-new', this.onNewOrder.bind(this));
     }
+
 
     /**
      * callback function for every new order placed
@@ -34,12 +51,16 @@ export class MatchingEngine {
                 this.sellMap.set(order.stockId, new LinkedListQueue<Order>());
 
             this.sellMap.get(order.stockId).push(order);
+
+            this.sellOrders.add(order);
         }
         else {
             if (!this.buyMap.has(order.stockId))
                 this.buyMap.set(order.stockId, new LinkedListQueue<Order>());
 
             this.buyMap.get(order.stockId).push(order);
+
+            this.buyOrders.add(order);
 
             //this.fullfillOrder(order);
         }
@@ -48,9 +69,14 @@ export class MatchingEngine {
 
     }
 
+    protected maxComparator(a: Order, b: Order) {
+
+        return a.price > b.price;
+    }
+
     protected fulfillOrder(order: Order) {
 
-        if (order.type === 'sell') {
+        /* if (order.type === 'sell') {
             return;
         }
 
@@ -66,8 +92,41 @@ export class MatchingEngine {
                 this.eventEmitter.emit('order-matched', order, sellorder);
                 break;
             }
-        }
+        } */
 
+
+        while (true) {
+
+            const highestBuy = this.buyOrders.peek();
+            const lowestSell = this.sellOrders.peek();
+
+            if (!highestBuy || !lowestSell) {
+                break;
+            }
+
+            if (highestBuy.price >= lowestSell.price) {
+                this.buyOrders.delete(highestBuy)!;
+                this.sellOrders.delete(lowestSell)!;
+
+                const quantityMatched = Math.min(highestBuy.quantity, lowestSell.quantity);
+                console.log(`Matched ${quantityMatched} units at price ${lowestSell.price}`);
+
+                if (buyOrder.quantity > quantityMatched) {
+                    buyOrder.quantity -= quantityMatched;
+                    this.buyOrders.insert(buyOrder);
+                }
+
+                if (sellOrder.quantity > quantityMatched) {
+                    sellOrder.quantity -= quantityMatched;
+                    this.sellOrders.insert(sellOrder);
+                }
+
+            }
+            else {
+                break;
+            }
+
+        }
     }
 
     fulfillOrders() {
@@ -78,7 +137,7 @@ export class MatchingEngine {
             console.log(`fulfill orders for stock:${stockId}`);
 
             const buyOrders = this.buyMap.get(stockId);
-            buyOrders.forEach( (order) => {
+            buyOrders.forEach((order) => {
                 this.fulfillOrder(order);
             });
 
@@ -90,7 +149,7 @@ export class MatchingEngine {
         for (const [k, v] of this.buyMap.entries()) {
             console.log(`${k}`, v)
         }
-        
+
         //console.log(this.sellMap.values())
     }
 }
