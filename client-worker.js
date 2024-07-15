@@ -1,11 +1,13 @@
-import { Worker } from 'worker_threads';
+import {Worker} from 'worker_threads';
 
-const worker = new Worker('./client.js', { workerData: { port: 2222, hostname: 'localhost' } });
+const worker = new Worker('./client.js', {
+  workerData: {port: 2222, hostname: 'localhost'},
+});
 
 worker.on('message', (message) => {
-    console.log('message from thread :', message);
-})
-worker.on("error", (msg) => {
-    console.log(msg);
+  console.log('message from thread :', message);
 });
-console.log('worker started')
+worker.on('error', (msg) => {
+  console.log(msg);
+});
+console.log('worker started');

@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf dist",
-    "lint": "eslint",
     "build": "tsc --project ./",
     "start": "node dist/main.js",
     "debug": "cd dist && node server.js"
@@ -15,11 +15,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.14.10",
+    "eslint": "^9.7.0",
+    "prettier": "^3.3.3",
     "rimraf": "^6.0.1"
   },
   "dependencies": {
-    "@types/collections": "^5.1.5",
     "csv-parser": "^3.0.0",
-    "data-structure-typed": "^1.52.0"
+    "datastructures-js": "^13.0.0"
   }
 }

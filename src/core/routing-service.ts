@@ -1,6 +1,6 @@
-import { Queue } from "data-structure-typed";
-import { Order } from "./order.interface";
+import { Order } from "../order/order.interface";
 import { EventEmitter } from 'events';
+import { OrderQueue } from "../order-queue";
 
 /**
  * class: RoutingService - Routes the incoming orders to the BUY or SELL queues.
@@ -9,33 +9,26 @@ import { EventEmitter } from 'events';
  */
 export class RoutingService {
 
-    private readonly buyQ: Queue;
-    private readonly sellQ: Queue;
+    private readonly buyQ: OrderQueue;
+    private readonly sellQ: OrderQueue;
     private readonly eventEmitter: EventEmitter;
 
-    constructor(eventEmitter: EventEmitter) {
-        this.buyQ = new Queue<Order>();
-        this.sellQ = new Queue<Order>();
+    constructor(eventEmitter: EventEmitter, buyQueue: OrderQueue, sellQueue: OrderQueue) {
         this.eventEmitter = eventEmitter;
+        this.buyQ = buyQueue;
+        this.sellQ = sellQueue
     }
 
     add(order: Order) {
 
         console.log(`received new order: ${order.id} ${order.stockId}`);
         if (order.type === 'buy') {
-            this.buyQ.push(order);
+            this.buyQ.enqueue(order);
         }
         else {
-            this.sellQ.push(order);
+            this.sellQ.enqueue(order);
         }
         this.eventEmitter.emit('order-new', order);
     }
 
-    dequeueBuy() {
-        return this.buyQ.shift();
-    }
-
-    dequeueSell() {
-        return this.sellQ.shift();
-    }
 }

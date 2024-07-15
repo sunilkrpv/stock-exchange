@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { Order } from "./order.interface";
+import { Order } from "./src/order/order.interface";
 
 export class OrderProcessingService {
 
