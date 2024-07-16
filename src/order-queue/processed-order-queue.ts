@@ -4,6 +4,7 @@ import { SellOrder } from "../order/sell-order";
 import { AbstractOrderQueue } from "./abstract-order-queue";
 import { AbstractOrder } from "../order/abstract-order";
 import { MaxHeap } from "datastructures-js";
+import { Order } from '../order/order.interface';
 
 
 /**
@@ -19,72 +20,28 @@ import { MaxHeap } from "datastructures-js";
  * 
  * other - unable to process the buy order
  */
-export class ProcessedOrderQueue extends AbstractOrderQueue {
-
-
-    /** sellOrders is a map of <stockId, orders(max heap)> */
-    protected sellOrders: Map<string, MaxHeap<SellOrder>> = null;
+export class ProcessedOrderQueue {
 
     constructor(private eventEmitter: EventEmitter) {
-
-        super();
-
-        this.sellOrders = new Map<string, MaxHeap<SellOrder>>();
+        this.eventEmitter = eventEmitter;
+        this.eventEmitter.on('matched', this.onMatched.bind(this));
+        this.eventEmitter.on('no-match', this.onNoMatch.bind(this));
+        this.eventEmitter.on('other', this.onError.bind(this));
     }
 
-    enqueue(order: AbstractOrder): void {
 
-        if (!this.sellOrders.has(order.stockId)) {
+    protected onMatched(sellOrder: Order, buyOrders: Order[]) {
 
-            this.sellOrders.set(order.stockId, new MaxHeap<SellOrder>((o) => o.price));
-        }
-
-        this.sellOrders.get(order.stockId).insert(order);
     }
 
-    /**
-     * Peeks the value of the highest priced stock
-     * @param stockId 
-     * @returns 
-     */
-    peek(stockId: string) {
+    protected onNoMatch(sellOrder: Order) {
 
-        if (!this.sellOrders.has(stockId)) {
-            return null;
-        }
-
-        return this.sellOrders.get(stockId).root();
     }
 
-    /**
-     * Returns the highest priced stock if found based on the stockId
-     * null if not found
-     * @param stockId - id of the stock 
-     * @returns 
-     */
-    dequeue(stockId: string) {
+    protected onError(sellOrder: Order) {
 
-        if (!this.sellOrders.has(stockId)) {
-            return null;
-        }
-
-        return this.sellOrders.get(stockId).extractRoot();
     }
 
-    /**
-     * Returns the lowest priced stock if found based on the stockId
-     * null if not found
-     * @param stockId - id of the stock 
-     * @returns 
-     */
-    min(stockId: string) {
-
-        if (!this.sellOrders.has(stockId)) {
-            return null;
-        }
-
-        // the minimum stock price is placed at the leaf
-        return this.sellOrders.get(stockId).leaf();
-    }
+    
 
 }

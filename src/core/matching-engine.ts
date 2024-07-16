@@ -1,3 +1,4 @@
+import { DoublyLinkedList } from "datastructures-js";
 import { Order } from "../order/order.interface";
 import { EventEmitter } from 'events';
 
@@ -9,31 +10,20 @@ import { EventEmitter } from 'events';
 export class MatchingEngine {
 
     private readonly eventEmitter: EventEmitter;
-    /** Buyers want at lowest prices, so map the stock-id and the prices in the increasing order */
-    protected buyMap: Map<string, LinkedListQueue>
-    /** Sellers want higher selling prices, map the stock-id and the prices in the decreasing order */
-    protected sellMap: Map<string, LinkedListQueue>
+    /** 
+     * Buyers want at lowest prices, so map the stock-id to corresponding prices the stocks list 
+     * eg: AMZN , { { 100: [O1, O2, ..., On] }, { 103: [O4, O6, ..., On] } }
+     **/
+    protected buyOrderPriceMap: Map<string, Map<number, DoublyLinkedList<Order>>>;
+    /** Sellers want higher selling prices, similar to buy order price map */
+    protected sellOrderPriceMap: Map<string, Map<number, DoublyLinkedList<Order>>>;
 
-    protected buyOrders: MinHeap<Order> = null;
-    protected sellOrders: MaxHeap<Order> = null;
 
     constructor(eventEmitter: EventEmitter) {
 
-        this.buyMap = new Map<string, LinkedListQueue<Order>>();
-        this.sellMap = new Map<string, LinkedListQueue<Order>>();
-
-        this.buyOrders = new MinHeap<Order>(null, {
-            comparator: (a: Order, b: Order) => {
-                return a.price - b.price;
-            }
-        });
-        this.sellOrders = new MaxHeap<Order>(null, {
-            comparator: (a: Order, b: Order) => {
-                return b.price - a.price;
-            }
-        });
-
         this.eventEmitter = eventEmitter;
+        this.buyOrderPriceMap = new Map<string, Map<number, DoublyLinkedList<Order>>>();
+        this.sellOrderPriceMap = new Map<string, Map<number, DoublyLinkedList<Order>>>();
         this.eventEmitter.on('order-new', this.onNewOrder.bind(this));
     }
 
@@ -44,112 +34,77 @@ export class MatchingEngine {
      */
     async onNewOrder(order: Order) {
 
-        console.log(`matching new order: ${order.id} ${order.stockId}`);
+        console.log(`new order received:${order.id} ${order.stockId} trying to match...`);
 
-        if (order.type === 'sell') {
-            if (!this.sellMap.has(order.stockId))
-                this.sellMap.set(order.stockId, new LinkedListQueue<Order>());
+        const orderPriceMap = order.type === 'buy' ? this.buyOrderPriceMap : this.sellOrderPriceMap;
 
-            this.sellMap.get(order.stockId).push(order);
+        if (!orderPriceMap.has(order.stockId))
+            orderPriceMap.set(order.stockId, new Map<number, DoublyLinkedList<Order>>());
 
-            this.sellOrders.add(order);
-        }
-        else {
-            if (!this.buyMap.has(order.stockId))
-                this.buyMap.set(order.stockId, new LinkedListQueue<Order>());
+        const priceMap = this.buyOrderPriceMap.get(order.stockId);
+        if (!priceMap.has(order.price))
+            priceMap.set(order.price, new DoublyLinkedList<Order>());
 
-            this.buyMap.get(order.stockId).push(order);
-
-            this.buyOrders.add(order);
-
-            //this.fullfillOrder(order);
-        }
-
-        // for the incoming order, check if there is an option for trade
-
+        priceMap.get(order.price).insertLast(order);
     }
 
-    protected maxComparator(a: Order, b: Order) {
 
-        return a.price > b.price;
-    }
+    protected doMatch(order: Order) {
 
-    protected fulfillOrder(order: Order) {
+        if (order.type === 'sell') return;
 
-        /* if (order.type === 'sell') {
+        const allSellOrders = this.sellOrderPriceMap.get(order.stockId);
+        // check if there is a sell order matching the buy order price
+        const matchingSellOrders = allSellOrders.get(order.price);
+        if (!matchingSellOrders) {
+            this.eventEmitter.emit('no-match', order);
             return;
         }
+        else {
 
+            const sellOrders: Order[] = [];
+            let currNode = matchingSellOrders.head();
+            while (currNode) {
 
-        // the order is to buy, check in the sellQ if there are any orders that can be fullfilled
-        const availableStocks = this.sellMap.get(order.stockId);
-        for (const sellorder of availableStocks.values()) {
+                const currSellOrder = currNode.getValue() as Order;
+                sellOrders.push(currSellOrder);
+                
+                if (order.quantity < currSellOrder.quantity) {
 
-            console.log(`checking match BUY:[id:${order.id} qty:${order.quantity} price:${order.price}] SELL:[id:${sellorder.id} qty:${sellorder.quantity} price:${sellorder.price}]`);
-            // check if the sellers's price matches with buyer's price
-            if (order.price >= sellorder.price && sellorder.status !== 'fulfilled') {
+                    // the buy order quantity can be fulfilled buy the current sell order fully
+                    order.fullfilledQuantity += order.quantity;
+                    currSellOrder.fullfilledQuantity -= order.quantity;;
+                }
+                else if (order.quantity > currSellOrder.quantity) {
 
-                this.eventEmitter.emit('order-matched', order, sellorder);
-                break;
-            }
-        } */
+                    // the buy order quantity can be fulfilled buy the current sell order partially
+                    order.fullfilledQuantity += currSellOrder.quantity;
+                    currSellOrder.fullfilledQuantity -= currSellOrder.quantity;
+                    currSellOrder.status = 'fulfilled';
+                }
+                else {
 
-
-        while (true) {
-
-            const highestBuy = this.buyOrders.peek();
-            const lowestSell = this.sellOrders.peek();
-
-            if (!highestBuy || !lowestSell) {
-                break;
-            }
-
-            if (highestBuy.price >= lowestSell.price) {
-                this.buyOrders.delete(highestBuy)!;
-                this.sellOrders.delete(lowestSell)!;
-
-                const quantityMatched = Math.min(highestBuy.quantity, lowestSell.quantity);
-                console.log(`Matched ${quantityMatched} units at price ${lowestSell.price}`);
-
-                if (buyOrder.quantity > quantityMatched) {
-                    buyOrder.quantity -= quantityMatched;
-                    this.buyOrders.insert(buyOrder);
+                    // the buy order quantity can be fulfilled by the current sell order exactly
+                    order.fullfilledQuantity += order.quantity;
+                    currSellOrder.fullfilledQuantity -= currSellOrder.quantity;
+                    currSellOrder.status = 'fulfilled';
                 }
 
-                if (sellOrder.quantity > quantityMatched) {
-                    sellOrder.quantity -= quantityMatched;
-                    this.sellOrders.insert(sellOrder);
+                if (order.fullfilledQuantity === order.quantity) {
+                    order.status = 'fulfilled';
+                    this.eventEmitter.emit("matched", order, sellOrders);
+                    break;
                 }
 
-            }
-            else {
-                break;
+                currNode = currNode.getNext();
             }
 
+            if (order.fullfilledQuantity && order.fullfilledQuantity !== order.quantity) {
+                order.status = 'partial';
+                this.eventEmitter.emit("matched", order, sellOrders);
+            }
         }
+        
     }
 
-    fulfillOrders() {
-
-        // pull all the buy orders for all stocks and execute
-        for (const stockId of this.buyMap.keys()) {
-
-            console.log(`fulfill orders for stock:${stockId}`);
-
-            const buyOrders = this.buyMap.get(stockId);
-            buyOrders.forEach((order) => {
-                this.fulfillOrder(order);
-            });
-
-        }
-    }
-
-    print() {
-
-        for (const [k, v] of this.buyMap.entries()) {
-            console.log(`${k}`, v)
-        }
-
-        //console.log(this.sellMap.values())
-    }
 }

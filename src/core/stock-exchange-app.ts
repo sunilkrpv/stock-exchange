@@ -17,10 +17,10 @@ export class StockExchangeApp {
 
     private constructor() {
         this.eventEmitter = new EventEmitter();
-        this.routingService = new RoutingService(this.eventEmitter);
-        this.matchingEngine = new MatchingEngine(this.eventEmitter);
         this.sellQueue = OrderQueueFactory.create('sell', this.eventEmitter);
         this.buyQueue = OrderQueueFactory.create('buy', this.eventEmitter);
+        this.routingService = new RoutingService(this.eventEmitter, this.buyQueue, this.sellQueue);
+        this.matchingEngine = new MatchingEngine(this.eventEmitter);
     }
 
     static getInstance() {
@@ -49,7 +49,7 @@ export class StockExchangeApp {
             })
             .on('end', () => {
                 console.log('CSV file successfully processed');
-                this.matchingEngine.fulfillOrders();
+                //this.matchingEngine.fulfillOrders();
             });
     }
 }
