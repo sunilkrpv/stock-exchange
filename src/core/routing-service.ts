@@ -1,34 +1,38 @@
 import { Order } from "../order/order.interface";
-import { EventEmitter } from 'events';
-import { OrderQueue } from "../order-queue";
+import { Kafka, Producer } from 'kafkajs';
 
 /**
- * class: RoutingService - Routes the incoming orders to the BUY or SELL queues.
- * Once the order is placed in the respective queues, an event is emitted for the new order placed
- * with the stock-exchange.
+ * class: RoutingService - Routes the incoming orders to the BUY or SELL topics of the broker.
  */
 export class RoutingService {
 
-    private readonly buyQ: OrderQueue;
-    private readonly sellQ: OrderQueue;
-    private readonly eventEmitter: EventEmitter;
+    private kafkaProducer: Producer;
 
-    constructor(eventEmitter: EventEmitter, buyQueue: OrderQueue, sellQueue: OrderQueue) {
-        this.eventEmitter = eventEmitter;
-        this.buyQ = buyQueue;
-        this.sellQ = sellQueue
+    constructor() { }
+
+    async initialize() {
+
+        const kafka = new Kafka({ 
+            clientId: 'stock-exchange',
+            brokers: ['localhost:9092']
+        });
+        this.kafkaProducer = kafka.producer({ allowAutoTopicCreation: true });
+        await this.kafkaProducer.connect();
     }
 
-    add(order: Order) {
+    async add(order: Order) {
 
         console.log(`received new order: ${order.id} ${order.stockId}`);
-        if (order.type === 'buy') {
-            this.buyQ.enqueue(order);
-        }
-        else {
-            this.sellQ.enqueue(order);
-        }
-        this.eventEmitter.emit('order-new', order);
+
+        await this.kafkaProducer.send({
+            topic: order.type,
+            messages: [{
+                key: order.stockId,
+                value: JSON.stringify(order)
+            }]
+        })
+        //.then(() => console.log(`sent message to broker`))
+        .catch(e => console.error(`[example/producer] ${e.message}`, e));
     }
 
 }

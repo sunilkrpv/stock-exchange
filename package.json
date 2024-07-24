@@ -2,14 +2,14 @@
   "name": "trade-xchange",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.ts",
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf dist",
     "build": "tsc --project ./",
     "start": "node dist/main.js",
-    "debug": "cd dist && node server.js"
+    "debug": "cd dist && node main.js"
   },
   "author": "sunil",
   "license": "ISC",
@@ -17,10 +17,13 @@
     "@types/node": "^20.14.10",
     "eslint": "^9.7.0",
     "prettier": "^3.3.3",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "csv-parser": "^3.0.0",
-    "datastructures-js": "^13.0.0"
+    "datastructures-js": "^13.0.0",
+    "kafkajs": "^2.2.4"
   }
 }

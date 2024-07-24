@@ -1,31 +1,30 @@
 import { EventEmitter } from "stream";
 import { RoutingService } from "./routing-service";
 import { MatchingEngine } from "./matching-engine";
-import { OrderQueue, OrderQueueFactory } from "../order-queue";
 import { createReadStream } from "fs";
 import csv = require('csv-parser');
 
 export class StockExchangeApp {
 
-    private eventEmitter: EventEmitter = null;
     private routingService: RoutingService = null;
     private matchingEngine: MatchingEngine = null;
-    private sellQueue: OrderQueue = null;
-    private buyQueue: OrderQueue = null;
 
     private static instance: StockExchangeApp;
 
     private constructor() {
-        this.eventEmitter = new EventEmitter();
-        this.sellQueue = OrderQueueFactory.create('sell', this.eventEmitter);
-        this.buyQueue = OrderQueueFactory.create('buy', this.eventEmitter);
-        this.routingService = new RoutingService(this.eventEmitter, this.buyQueue, this.sellQueue);
-        this.matchingEngine = new MatchingEngine(this.eventEmitter);
+        this.routingService = new RoutingService();
+        this.matchingEngine = new MatchingEngine();
     }
 
     static getInstance() {
+        return StockExchangeApp.instance;
+    }
+
+    static async init() {
         if (!StockExchangeApp.instance) {
             StockExchangeApp.instance = new StockExchangeApp();
+            await StockExchangeApp.instance.matchingEngine.initialize();
+            await StockExchangeApp.instance.routingService.initialize();
         }
         return StockExchangeApp.instance;
     }
@@ -35,9 +34,9 @@ export class StockExchangeApp {
 
         createReadStream('./orders.csv')
             .pipe(csv())
-            .on("data", (data: { id: string; type: any; stockId: any; price: string; quantity: string; }) => {
+            .on("data", async (data: { id: string; type: any; stockId: any; price: string; quantity: string; }) => {
 
-                this.routingService.add({
+                await this.routingService.add({
                     id: parseInt(data.id, 10),
                     type: data.type,
                     stockId: data.stockId,
