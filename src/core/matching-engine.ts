@@ -29,29 +29,31 @@ export class MatchingEngine {
     }
 
     async initialize() {
+
+        const kafka = new Kafka({
+            clientId: process.env.KAFKA_CLUSTER_ID,
+            brokers: [process.env.KAFKA_SEED_BROKER]
+        });
+
         await Promise.all([
-            this.initializeProducer(),
-            this.initializeConsumer()
+            this.initializeProducer(kafka),
+            this.initializeConsumer(kafka)
         ]);
     }
 
-    protected async initializeProducer() {
+    protected async initializeProducer(kafka: Kafka) {
 
-        const kafka = new Kafka({
-            clientId: 'stock-exchange',
-            brokers: ['localhost:9092']
-        });
+        if (!kafka) throw new Error(`Kafka configuration not passed`);
+
         this.orderProcessedProducer = kafka.producer({ allowAutoTopicCreation: true });
         await this.orderProcessedProducer.connect().then(() => console.log(`PRODUCER(PROCESSED ORDER) CONNECTED`));
     }
 
-    protected async initializeConsumer() {
+    protected async initializeConsumer(kafka: Kafka) {
 
-        const kafka = new Kafka({
-            clientId: 'stock-exchange',
-            brokers: ['localhost:9092']
-        });
-        this.orderConsumer = kafka.consumer({ groupId: 'order-consumer' });
+        if (!kafka) throw new Error(`Kafka configuration not passed`);
+
+        this.orderConsumer = kafka.consumer({ groupId: process.env.KAFKA_ORDER_CONSUMER_GROUP });
         await this.orderConsumer.connect().then(() => console.log(`CONSUMER(ORDER) CONNECTED`));
 
         await this.orderConsumer.subscribe({ topics: ['buy', 'sell'] })

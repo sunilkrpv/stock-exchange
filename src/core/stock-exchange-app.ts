@@ -1,9 +1,12 @@
-import { EventEmitter } from "stream";
+//import { EventEmitter } from "stream";
 import { RoutingService } from "./routing-service";
 import { MatchingEngine } from "./matching-engine";
 import { createReadStream } from "fs";
 import csv = require('csv-parser');
 
+/**
+ * @class StockExchangeApp - singleton class to simulate the stock exchange
+ */
 export class StockExchangeApp {
 
     private routingService: RoutingService = null;

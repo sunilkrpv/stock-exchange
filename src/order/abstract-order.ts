@@ -1,14 +1,6 @@
 import { Order } from "./order.interface";
 
 export abstract class AbstractOrder implements Order {
-    //id: number;
-    // type: "buy" | "sell";
-    // stockId: string;
-    // price: number;
-    // quantity: number;
-    // fullfilledQuantity: number;
-    // status: "placed" | "fulfilled" | "partial";
-
 
     constructor(public readonly id: number,
         public readonly stockId: string,
@@ -18,6 +10,5 @@ export abstract class AbstractOrder implements Order {
         public readonly status: "placed" | "fulfilled" | "partial",
         public readonly fullfilledQuantity = 0) {
     }
-
 
 }

@@ -13,8 +13,8 @@ export class RoutingService {
     async initialize() {
 
         const kafka = new Kafka({ 
-            clientId: 'stock-exchange',
-            brokers: ['localhost:9092']
+            clientId: process.env.KAFKA_CLUSTER_ID,
+            brokers: [process.env.KAFKA_SEED_BROKER]
         });
         this.kafkaProducer = kafka.producer({ allowAutoTopicCreation: true });
         await this.kafkaProducer.connect();
