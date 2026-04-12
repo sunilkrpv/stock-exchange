@@ -18,7 +18,7 @@ export class UdpServer {
         if (this.socket) throw new Error('Server has already been started');
 
 
-        this.socket = createSocket('udp4', this.messageHandler);
+        this.socket = createSocket('udp4', this.messageHandler.bind(this));
 
 
         this.socket.on('listening', () => {
@@ -53,14 +53,15 @@ export class UdpServer {
 
     private messageHandler(msg: Buffer, rinfo: RemoteInfo) {
 
-        console.log(`new message from ${rinfo.address} at ${new Date().toDateString()}`);
+        const message = Buffer.from(msg).toString();
+        console.log(`new message:${message} from ${rinfo.address} at ${new Date().toTimeString()}`);
 
-        this.socket.send(Buffer.from('ack'), this.port, this.hostname, (err) => {
-            if (err) {
-                console.error(`Failed to ACK ${rinfo.address}`)
-            } else {
-                console.log('Response send Successfully')
-            }
-        });
+        // this.socket.send(Buffer.from('ack'), this.port, this.hostname, (err) => {
+        //     if (err) {
+        //         console.error(`Failed to ACK ${rinfo.address}`)
+        //     } else {
+        //         console.log('Response send Successfully')
+        //     }
+        // });
     }
 }

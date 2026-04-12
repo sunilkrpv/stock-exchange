@@ -69,6 +69,10 @@ export class MatchingEngine {
                 await this.onNewOrder(JSON.parse(message.value.toString()));
             }
         });
+
+        this.orderConsumer.on('consumer.commit_offsets', (e) => {
+            console.log('consumer.commit_offsets:', e)
+        });
     }
 
 

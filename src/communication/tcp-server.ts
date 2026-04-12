@@ -1,4 +1,5 @@
 import { Server, Socket, createServer } from 'net';
+import { Order } from '../order/order.interface';
 
 
 export class TcpServer {
@@ -18,9 +19,9 @@ export class TcpServer {
         if (this.server) throw new Error('Server has already been started');
 
 
-        this.server = createServer(this.clientConnectionHandler);
+        this.server = createServer(this.clientConnectionHandler.bind(this));
         this.server.listen(this.port, this.hostname, () => {
-            console.log(`TCP server started Address:${this.hostname} PORT:${this.port}`);
+            console.log(`Stock-exchange TCP server started Address:${this.hostname} PORT:${this.port}`);
         });
     }
 
@@ -38,7 +39,7 @@ export class TcpServer {
 
     private clientConnectionHandler(clientSocket: Socket) {
 
-        console.log(`new client connected:${clientSocket.address} at ${new Date().toDateString()}`);
+        console.log(`new client connected:${clientSocket.address()} at ${new Date().toDateString()}`);
         this.clients.push(clientSocket);
         clientSocket.on('data', (data) => {
             this.handleClientMessage(data);
@@ -47,6 +48,9 @@ export class TcpServer {
 
     private handleClientMessage(buff: Buffer) {
 
-        const message = Buffer.from
+        const incoming = Buffer.from(buff).toString();
+        console.log(`received message: ${incoming}`)
+        // const orders: Order[] = JSON.parse(incoming);
+        // console.log(orders);
     }
 }

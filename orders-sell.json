@@ -1,0 +1,443 @@
+[
+  {
+    "id": 16220,
+    "type": "sell",
+    "stockId": "ITC",
+    "price": 1055.49,
+    "quantity": 36
+  },
+  {
+    "id": 43577,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1741.74,
+    "quantity": 161
+  },
+  {
+    "id": 50800,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1731.85,
+    "quantity": 47
+  },
+  {
+    "id": 38511,
+    "type": "sell",
+    "stockId": "ITC",
+    "price": 1906.75,
+    "quantity": 156
+  },
+  {
+    "id": 60528,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1306.45,
+    "quantity": 133
+  },
+  {
+    "id": 4481,
+    "type": "sell",
+    "stockId": "SBIN",
+    "price": 1113.19,
+    "quantity": 407
+  },
+  {
+    "id": 56330,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1741.74,
+    "quantity": 149
+  },
+  {
+    "id": 45726,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1705.24,
+    "quantity": 212
+  },
+  {
+    "id": 75579,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1219.73,
+    "quantity": 306
+  },
+  {
+    "id": 61384,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1196.53,
+    "quantity": 72
+  },
+  {
+    "id": 84603,
+    "type": "sell",
+    "stockId": "SBIN",
+    "price": 1163.02,
+    "quantity": 426
+  },
+  {
+    "id": 3998,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1772.37,
+    "quantity": 79
+  },
+  {
+    "id": 62491,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1792.63,
+    "quantity": 254
+  },
+  {
+    "id": 60727,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1242.34,
+    "quantity": 85
+  },
+  {
+    "id": 29536,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1793.6,
+    "quantity": 61
+  },
+  {
+    "id": 25307,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1813.55,
+    "quantity": 95
+  },
+  {
+    "id": 43937,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1223.09,
+    "quantity": 206
+  },
+  {
+    "id": 49157,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1151.89,
+    "quantity": 253
+  },
+  {
+    "id": 27038,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1845.95,
+    "quantity": 75
+  },
+  {
+    "id": 89161,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1561.15,
+    "quantity": 469
+  },
+  {
+    "id": 21749,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1258.33,
+    "quantity": 138
+  },
+  {
+    "id": 66301,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1065.23,
+    "quantity": 122
+  },
+  {
+    "id": 4598,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1251.3,
+    "quantity": 238
+  },
+  {
+    "id": 82226,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1641.6,
+    "quantity": 259
+  },
+  {
+    "id": 92959,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1388.32,
+    "quantity": 264
+  },
+  {
+    "id": 6487,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1412.75,
+    "quantity": 44
+  },
+  {
+    "id": 30379,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1388.32,
+    "quantity": 470
+  },
+  {
+    "id": 35614,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1207.71,
+    "quantity": 94
+  },
+  {
+    "id": 52998,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1723.68,
+    "quantity": 487
+  },
+  {
+    "id": 49756,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1986.7,
+    "quantity": 116
+  },
+  {
+    "id": 13084,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1283.84,
+    "quantity": 403
+  },
+  {
+    "id": 10869,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1678.35,
+    "quantity": 52
+  },
+  {
+    "id": 48022,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1176.8,
+    "quantity": 61
+  },
+  {
+    "id": 37982,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1138.48,
+    "quantity": 301
+  },
+  {
+    "id": 39956,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1267.73,
+    "quantity": 353
+  },
+  {
+    "id": 84632,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1058.58,
+    "quantity": 250
+  },
+  {
+    "id": 76541,
+    "type": "sell",
+    "stockId": "ITC",
+    "price": 1166.66,
+    "quantity": 57
+  },
+  {
+    "id": 45484,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1986.97,
+    "quantity": 369
+  },
+  {
+    "id": 52451,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1671.45,
+    "quantity": 279
+  },
+  {
+    "id": 29910,
+    "type": "sell",
+    "stockId": "SBIN",
+    "price": 1087.23,
+    "quantity": 374
+  },
+  {
+    "id": 96595,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1451.53,
+    "quantity": 238
+  },
+  {
+    "id": 47448,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1082.2,
+    "quantity": 98
+  },
+  {
+    "id": 42489,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1754.33,
+    "quantity": 137
+  },
+  {
+    "id": 86584,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1245.6,
+    "quantity": 151
+  },
+  {
+    "id": 11940,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1707.91,
+    "quantity": 317
+  },
+  {
+    "id": 17756,
+    "type": "sell",
+    "stockId": "ITC",
+    "price": 1152.9,
+    "quantity": 416
+  },
+  {
+    "id": 19731,
+    "type": "sell",
+    "stockId": "KOTAKBANK",
+    "price": 1271.37,
+    "quantity": 377
+  },
+  {
+    "id": 71628,
+    "type": "sell",
+    "stockId": "RELIANCE",
+    "price": 1888.14,
+    "quantity": 215
+  },
+  {
+    "id": 47625,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1455.9,
+    "quantity": 88
+  },
+  {
+    "id": 37267,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1960.85,
+    "quantity": 394
+  },
+  {
+    "id": 84700,
+    "type": "sell",
+    "stockId": "ITC",
+    "price": 1156.6,
+    "quantity": 278
+  },
+  {
+    "id": 19121,
+    "type": "sell",
+    "stockId": "ICICIBANK",
+    "price": 1916.61,
+    "quantity": 56
+  },
+  {
+    "id": 7459,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1371.15,
+    "quantity": 478
+  },
+  {
+    "id": 4712,
+    "type": "sell",
+    "stockId": "SBIN",
+    "price": 1691.95,
+    "quantity": 22
+  },
+  {
+    "id": 43826,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1186.55,
+    "quantity": 276
+  },
+  {
+    "id": 12798,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1723.68,
+    "quantity": 328
+  },
+  {
+    "id": 80357,
+    "type": "sell",
+    "stockId": "AXISBANK",
+    "price": 1110.72,
+    "quantity": 70
+  },
+  {
+    "id": 65599,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1064.47,
+    "quantity": 77
+  },
+  {
+    "id": 99218,
+    "type": "sell",
+    "stockId": "HINDUNILVR",
+    "price": 1702.88,
+    "quantity": 155
+  },
+  {
+    "id": 73387,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1416.12,
+    "quantity": 219
+  },
+  {
+    "id": 81291,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1885.13,
+    "quantity": 388
+  },
+  {
+    "id": 29268,
+    "type": "sell",
+    "stockId": "HDFCBANK",
+    "price": 1384.61,
+    "quantity": 276
+  },
+  {
+    "id": 99873,
+    "type": "sell",
+    "stockId": "INFY",
+    "price": 1411.12,
+    "quantity": 170
+  }
+]
